@@ -4,24 +4,21 @@
  *
  * This file provides the autoloader for the Plugin.
  *
- * @package DarkMatter_Package
+ * @package DM_Theme_Style_Switcher
  **/
 
-namespace DarkMatter_Plugin\Helpers;
+namespace DM_Theme_Style_Switcher\Helpers;
 
 spl_autoload_register(
 	function ( $what ) {
 		$split = explode( '\\', $what );
-		if ( 'DarkMatter_Plugin' !== $split[0] ) {
+		if ( 'DM_Theme_Style_Switcher' !== $split[0] ) {
 			return;
 		}
 		$base_dir = 'include/';
 
 		if ( isset( $split[1] ) && 'Traits' === $split[1] ) {
 			$base_dir .= 'traits/trait-';
-			$split[1]  = '';
-		} elseif ( isset( $split[1] ) && 'API' === $split[1] ) {
-			$base_dir .= 'classes/api/class-';
 			$split[1]  = '';
 		} else {
 			$base_dir .= 'classes/class-';
@@ -37,8 +34,8 @@ spl_autoload_register(
 
 		$file_path = implode( '', $split );
 
-		if ( file_exists( DMP_PLUGIN_PATH . $file_path ) ) {
-			include_once DMP_PLUGIN_PATH . $file_path;
+		if ( file_exists( TSS_PLUGIN_PATH . $file_path ) ) {
+			include_once TSS_PLUGIN_PATH . $file_path;
 		}
 	}
 );

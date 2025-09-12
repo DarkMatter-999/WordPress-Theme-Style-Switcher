@@ -2,12 +2,12 @@
 /**
  * Block Class file for the Plugin.
  *
- * @package DarkMatter_Package
+ * @package DM_Theme_Style_Switcher
  */
 
-namespace DarkMatter_Plugin;
+namespace DM_Theme_Style_Switcher;
 
-use DarkMatter_Plugin\Traits\Singleton;
+use DM_Theme_Style_Switcher\Traits\Singleton;
 
 /**
  * Block Class file for the Plugin.
@@ -34,7 +34,7 @@ class Blocks {
 	 */
 	public function register() {
 		register_block_type(
-			DMP_PLUGIN_PATH . 'assets/build/blocks/block'
+			TSS_PLUGIN_PATH . 'assets/build/blocks/theme-switcher-block'
 		);
 	}
 
@@ -51,9 +51,9 @@ class Blocks {
 			$categories,
 			array(
 				array(
-					'slug'  => 'custom-category',
-					'title' => __( 'Custom Blocks', 'text-domain-1' ),
-					'icon'  => null,
+					'slug'  => 'theme-switcher',
+					'title' => __( 'Theme Switcher', 'dm-tss' ),
+					'icon'  => 'null',
 				),
 			)
 		);

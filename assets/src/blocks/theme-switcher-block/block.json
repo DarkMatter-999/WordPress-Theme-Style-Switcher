@@ -1,0 +1,15 @@
+{
+  "apiVersion": 3,
+  "name": "dm-tss/theme-style-switcher",
+  "title": "Theme Style Switcher",
+  "category": "theme-switcher",
+  "icon": "art",
+  "textdomain": "dm-tss",
+  "version": "0.1.0",
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "render": null,
+  "supports": {
+    "html": false
+  }
+}

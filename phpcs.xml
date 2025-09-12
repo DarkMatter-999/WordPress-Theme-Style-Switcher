@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<ruleset name="myplugin">
+<ruleset name="Theme Style Switcher">
 	<description>Best practices sniffs for WordPress plugins</description>
 
 	<rule ref="WordPress">
@@ -10,8 +10,7 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="text-domain-1" />
-				<element value="text-domain-2" />
+				<element value="dm-tss" />
 			</property>
 		</properties>
 	</rule>
