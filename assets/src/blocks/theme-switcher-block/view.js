@@ -2,6 +2,10 @@
 
 ( function () {
 	const CLASS_PREFIX = 'is-style-';
+	const __ =
+		window.wp && window.wp.i18n && window.wp.i18n.__
+			? window.wp.i18n.__
+			: ( s ) => s;
 
 	const switchStyle = ( slug ) => {
 		const root = document.documentElement;
@@ -59,7 +63,7 @@
 
 			// Default button
 			buttonsWrapper.appendChild(
-				createStyledButton( 'Default', 'default' )
+				createStyledButton( __( 'Default', 'dm-tss' ), 'default' )
 			);
 
 			// Variation buttons

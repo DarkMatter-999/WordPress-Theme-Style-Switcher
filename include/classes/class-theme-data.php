@@ -25,6 +25,7 @@ class Theme_Data {
 		add_action( 'wp_enqueue_scripts', array( $this, 'tss_enqueue_scoped_variation_styles' ) );
 		add_action( 'wp_head', array( $this, 'tss_output_variation_fonts' ), 1 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'tss_localize_script' ) );
+		add_action( 'enqueue_block_editor_assets', array( $this, 'tss_localize_script' ) );
 	}
 
 	/**
