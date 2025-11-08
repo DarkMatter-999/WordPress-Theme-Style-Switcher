@@ -9,6 +9,12 @@
   "editorScript": "file:./index.js",
   "viewScript": "file:./view.js",
   "render": null,
+  "attributes": {
+    "display": {
+      "type": "string",
+      "default": "buttons"
+    }
+  },
   "supports": {
     "html": false
   }
