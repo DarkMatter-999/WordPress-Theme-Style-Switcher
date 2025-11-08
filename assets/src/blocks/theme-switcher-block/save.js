@@ -6,5 +6,10 @@
  */
 
 export default function Save() {
-	return <div className="theme-style-switcher-block" data-tss-block></div>;
+	return (
+		<div
+			className="theme-style-switcher-block wp-block-buttons"
+			data-tss-block
+		></div>
+	);
 }

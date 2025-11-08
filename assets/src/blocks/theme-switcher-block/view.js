@@ -32,20 +32,41 @@
 			'.theme-style-switcher-block'
 		);
 		if ( container && window.tss_data?.variations ) {
+			const buttonsWrapper = document.createElement( 'div' );
+			buttonsWrapper.classList.add(
+				'wp-block-buttons',
+				'is-layout-flex',
+				'wp-block-buttons-is-layout-flex'
+			);
+			container.appendChild( buttonsWrapper );
+
+			// Helper function to create a button with the new structure
+			const createStyledButton = ( text, slug ) => {
+				const buttonBlock = document.createElement( 'div' );
+				buttonBlock.classList.add( 'wp-block-button' );
+
+				const buttonLink = document.createElement( 'a' );
+				buttonLink.classList.add(
+					'wp-block-button__link',
+					'wp-element-button'
+				);
+				buttonLink.innerText = text;
+				buttonLink.onclick = () => switchStyle( slug );
+
+				buttonBlock.appendChild( buttonLink );
+				return buttonBlock;
+			};
+
 			// Default button
-			const defaultBtn = document.createElement( 'button' );
-			defaultBtn.innerText = 'Default';
-			defaultBtn.style.marginRight = '10px';
-			defaultBtn.onclick = () => switchStyle( 'default' );
-			container.appendChild( defaultBtn );
+			buttonsWrapper.appendChild(
+				createStyledButton( 'Default', 'default' )
+			);
 
 			// Variation buttons
 			window.tss_data.variations.forEach( ( v ) => {
-				const btn = document.createElement( 'button' );
-				btn.innerText = v.title;
-				btn.style.marginRight = '10px';
-				btn.onclick = () => switchStyle( v.slug );
-				container.appendChild( btn );
+				buttonsWrapper.appendChild(
+					createStyledButton( v.title, v.slug )
+				);
 			} );
 		}
 	} );
