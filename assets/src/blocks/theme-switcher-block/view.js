@@ -40,6 +40,10 @@
 			containers.forEach( ( container ) => {
 				const display = container.dataset.display || 'buttons';
 
+				if ( display === 'invisible' ) {
+					return;
+				}
+
 				if ( display === 'dropdown' ) {
 					const select = document.createElement( 'select' );
 					select.classList.add(

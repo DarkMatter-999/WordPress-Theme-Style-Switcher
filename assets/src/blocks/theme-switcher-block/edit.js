@@ -37,6 +37,10 @@ export default function Edit( { attributes, setAttributes } ) {
 								label: __( 'Dropdown', 'dm-tss' ),
 								value: 'dropdown',
 							},
+							{
+								label: __( 'Invisible', 'dm-tss' ),
+								value: 'invisible',
+							},
 						] }
 						onChange={ ( val ) =>
 							setAttributes( { display: val } )
@@ -98,6 +102,18 @@ export default function Edit( { attributes, setAttributes } ) {
 								</option>
 							) ) }
 						</select>
+					</div>
+				) }
+
+				{ display === 'invisible' && (
+					<div
+						className="tss-invisible-preview"
+						style={ { fontStyle: 'italic' } }
+					>
+						{ __(
+							'Theme switcher invisible on frontend',
+							'dm-tss'
+						) }
 					</div>
 				) }
 			</div>
