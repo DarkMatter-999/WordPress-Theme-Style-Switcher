@@ -249,6 +249,160 @@ class Theme_Data {
 			$theme_json_obj = new \WP_Theme_JSON( $cleaned );
 			$css            = $theme_json_obj->get_stylesheet();
 
+			// If override settings are enabled, remove individual declarations that reference
+			// 'size' (layout) or 'color' (colors) from the generated stylesheet. This prevents
+			// theme JSON generated declarations from overriding plugin-controlled variables.
+			$layout_override = get_option( 'dm_tss_override_layout' );
+			$color_override  = get_option( 'dm_tss_override_colors' );
+
+			if ( $layout_override || $color_override ) {
+				$filter_css = function ( $css_string ) use ( &$filter_css, $layout_override, $color_override ) {
+					$filtered_css = '';
+					$lines        = preg_split( '/(?<=\})\s*/', $css_string );
+
+					foreach ( $lines as $line ) {
+						$line = trim( $line );
+						if ( empty( $line ) ) {
+							continue;
+						}
+
+						// Handle @media queries by filtering their inner CSS recursively.
+						if ( str_starts_with( $line, '@media' ) ) {
+							if ( preg_match( '/@media\s+([^{]+)\{(.*)\}\s*$/s', $line, $matches ) ) {
+								$media_query = trim( $matches[1] );
+								$inner_css   = trim( $matches[2] );
+
+								$filtered_inner = $filter_css( $inner_css );
+
+								// Only include the media block if there's remaining inner CSS.
+								if ( '' !== trim( $filtered_inner ) ) {
+									$filtered_css .= "@media $media_query {\n" . $filtered_inner . "\n}\n";
+								}
+							} else {
+								$filtered_css .= $line . "\n";
+							}
+							continue;
+						}
+
+						// Match CSS blocks like "selector { rules }".
+						if ( preg_match( '/^([^{]+)\{(.*)\}$/s', $line, $matches ) ) {
+							$selectors = trim( $matches[1] );
+							$rules     = trim( $matches[2] );
+
+							// Break declarations apart by semicolon (simple split).
+							// Note: this is a heuristic and assumes declarations are not containing unmatched semicolons.
+							$decls = preg_split( '/;(?![^(]*\))/', $rules );
+
+							$kept_decls = array();
+							foreach ( $decls as $decl ) {
+								$decl = trim( $decl );
+								if ( '' === $decl ) {
+									continue;
+								}
+
+								$lower_decl = strtolower( $decl );
+								$remove     = false;
+
+								// Remove declaration if it mentions 'size' and layout override is enabled.
+								if ( $layout_override && strpos( $lower_decl, 'size' ) !== false ) {
+									$remove = true;
+								}
+
+								// Remove declaration if it mentions 'color' and color override is enabled.
+								if ( $color_override && strpos( $lower_decl, 'color' ) !== false ) {
+									$remove = true;
+								}
+
+								if ( ! $remove ) {
+									$kept_decls[] = $decl;
+								}
+							}
+
+							// If any declarations remain, reassemble and keep the rule.
+							if ( ! empty( $kept_decls ) ) {
+								$filtered_rules = implode( ";\n", $kept_decls ) . ';';
+								$filtered_css  .= $selectors . " {\n" . $filtered_rules . "\n}\n";
+							} else { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElse -- Intentional empty block.
+								// No declarations left after filtering — omit the rule entirely.
+							}
+
+							continue;
+						}
+
+						// Unknown block format: attempt a lightweight removal of matching declarations.
+						$lower_line           = strtolower( $line );
+						$should_remove_entire = false;
+						if ( $layout_override && strpos( $lower_line, 'size' ) !== false ) {
+							// Try to remove declarations containing 'size' inside the block portion of the line.
+							$line = preg_replace(
+								'/[^{}]*\{([^}]*)\}/s',
+								function ( $m ) use ( $layout_override, $color_override ) {
+									$inner = $m[1];
+									$decls = preg_split( '/;(?![^(]*\))/', $inner );
+									$kept  = array();
+									foreach ( $decls as $d ) {
+										$d = trim( $d );
+										if ( '' === $d ) {
+											continue;
+										}
+										if ( strpos( strtolower( $d ), 'size' ) !== false ) {
+											continue;
+										}
+										if ( $color_override && strpos( strtolower( $d ), 'color' ) !== false ) {
+											continue;
+										}
+										$kept[] = $d;
+									}
+									if ( empty( $kept ) ) {
+										return '';
+									}
+									return '{' . implode( ';', $kept ) . ';}';
+								},
+								$line
+							);
+						} elseif ( $color_override && strpos( $lower_line, 'color' ) !== false ) {
+							$line = preg_replace(
+								'/[^{}]*\{([^}]*)\}/s',
+								function ( $m ) use ( $layout_override, $color_override ) {
+									$inner = $m[1];
+									$decls = preg_split( '/;(?![^(]*\))/', $inner );
+									$kept  = array();
+									foreach ( $decls as $d ) {
+										$d = trim( $d );
+										if ( '' === $d ) {
+											continue;
+										}
+										if ( $layout_override && strpos( strtolower( $d ), 'size' ) !== false ) {
+											continue;
+										}
+										if ( strpos( strtolower( $d ), 'color' ) !== false ) {
+											continue;
+										}
+										$kept[] = $d;
+									}
+									if ( empty( $kept ) ) {
+										return '';
+									}
+									return '{' . implode( ';', $kept ) . ';}';
+								},
+								$line
+							);
+						}
+
+						// If line became empty after replacements, skip it.
+						if ( trim( $line ) === '' ) {
+							continue;
+						}
+
+						$filtered_css .= $line . "\n";
+					}
+
+					return $filtered_css;
+				};
+
+				$css = $filter_css( $css );
+			}
+
 			$all_css[ $slug ] = $css;
 		}
 

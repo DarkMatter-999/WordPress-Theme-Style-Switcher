@@ -26,5 +26,6 @@ class Plugin {
 		Assets::get_instance();
 		Blocks::get_instance();
 		Theme_Data::get_instance();
+		Settings::get_instance();
 	}
 }
