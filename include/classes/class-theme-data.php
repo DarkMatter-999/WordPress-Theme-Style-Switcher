@@ -560,10 +560,8 @@ class Theme_Data {
 	 * @return void
 	 */
 	public function tss_localize_script() {
-		wp_enqueue_script( 'tss-switcher', plugin_dir_url( __FILE__ ) . 'src/style-switcher.js', array(), wp_get_theme()->get( 'Version' ), true );
-
 		wp_localize_script(
-			'tss-switcher',
+			'main-js',
 			'tss_data',
 			array(
 				'variations' => $this->tss_get_theme_variations(),
