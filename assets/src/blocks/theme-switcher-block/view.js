@@ -2,10 +2,6 @@
 
 ( function () {
 	const CLASS_PREFIX = 'is-style-';
-	const __ =
-		window.wp && window.wp.i18n && window.wp.i18n.__
-			? window.wp.i18n.__
-			: ( s ) => s;
 
 	const switchStyle = ( slug ) => {
 		const root = document.documentElement;
@@ -53,11 +49,6 @@
 						'wp-element-button'
 					);
 					select.name = 'theme-style-switcher';
-
-					const defaultOpt = document.createElement( 'option' );
-					defaultOpt.value = 'default';
-					defaultOpt.innerText = __( 'Default', 'dm-tss' );
-					select.appendChild( defaultOpt );
 
 					window.tss_data.variations.forEach( ( v ) => {
 						const opt = document.createElement( 'option' );
@@ -111,12 +102,6 @@
 					return buttonBlock;
 				};
 
-				// Default button
-				buttonsWrapper.appendChild(
-					createStyledButton( __( 'Default', 'dm-tss' ), 'default' )
-				);
-
-				// Variation buttons
 				window.tss_data.variations.forEach( ( v ) => {
 					buttonsWrapper.appendChild(
 						createStyledButton( v.title, v.slug )

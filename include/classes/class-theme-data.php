@@ -425,7 +425,12 @@ class Theme_Data {
 	 */
 	public function tss_get_theme_variations() {
 		$theme_dir  = get_theme_file_path( 'styles' );
-		$variations = array();
+		$variations = array(
+			array(
+				'slug'  => '00-default',
+				'title' => __( 'Default', 'dm-tss' ),
+			),
+		);
 
 		if ( file_exists( $theme_dir ) ) {
 			foreach ( glob( $theme_dir . '/*.json' ) as $file ) {
@@ -560,11 +565,44 @@ class Theme_Data {
 	 * @return void
 	 */
 	public function tss_localize_script() {
+		$raw_variations = $this->tss_get_theme_variations();
+
+		$saved_mappings = get_option( 'dm_tss_name_mappings', array() );
+		if ( is_string( $saved_mappings ) && '' !== $saved_mappings ) {
+			$decoded_saved = json_decode( $saved_mappings, true );
+			if ( json_last_error() === JSON_ERROR_NONE && is_array( $decoded_saved ) ) {
+				$saved_mappings = $decoded_saved;
+			} else {
+				$saved_mappings = array();
+			}
+		} elseif ( ! is_array( $saved_mappings ) ) {
+			$saved_mappings = array();
+		}
+
+		$use_mapped = (bool) get_option( 'dm_tss_use_mapped_names', 0 );
+
+		$variations = array();
+
+		foreach ( $raw_variations as $v ) {
+			$slug  = $v['slug'] ?? '';
+			$title = $v['title'] ?? ucfirst( $slug );
+
+			if ( $use_mapped && '' !== $slug && isset( $saved_mappings[ $slug ] ) && '' !== $saved_mappings[ $slug ] ) {
+				$title = $saved_mappings[ $slug ];
+			}
+
+			$variations[] = array(
+				'slug'  => $slug,
+				'title' => $title,
+			);
+		}
+
 		wp_localize_script(
 			'main-js',
 			'tss_data',
 			array(
-				'variations' => $this->tss_get_theme_variations(),
+				'variations'     => $variations,
+				'useMappedNames' => $use_mapped ? 1 : 0,
 			)
 		);
 	}

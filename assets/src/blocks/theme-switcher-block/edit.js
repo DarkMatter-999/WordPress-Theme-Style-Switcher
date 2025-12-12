@@ -55,16 +55,6 @@ export default function Edit( { attributes, setAttributes } ) {
 						className="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex"
 						style={ { display: 'flex', gap: '10px' } }
 					>
-						<div className="wp-block-button" aria-hidden="true">
-							<span
-								className="wp-block-button__link wp-element-button"
-								aria-hidden="true"
-								tabIndex={ -1 }
-							>
-								{ __( 'Default', 'dm-tss' ) }
-							</span>
-						</div>
-
 						{ variations.map( ( v ) => (
 							<div
 								className="wp-block-button"
@@ -93,9 +83,6 @@ export default function Edit( { attributes, setAttributes } ) {
 							aria-disabled="true"
 							className="wp-block-button wp-block-button__link wp-element-button"
 						>
-							<option value="default">
-								{ __( 'Default', 'dm-tss' ) }
-							</option>
 							{ variations.map( ( v ) => (
 								<option key={ v.slug } value={ v.slug }>
 									{ v.title }
