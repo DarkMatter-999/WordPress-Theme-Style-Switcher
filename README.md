@@ -12,6 +12,8 @@ License: GPL v2 or later
 
 `Theme Style Switcher` lets authors add a block (Theme Style Switcher) to post content or templates that allows visitors to switch between a theme's style variations (the JSON files stored in the theme's `styles/` directory). Each variation's generated CSS is scoped to a CSS class (format: `is-style-{slug}`), which the plugin toggles on the `<html>` element. The user's selection is persisted to `localStorage` so it survives page loads.
 
+[ThemeStyleSwitcherDemo.webm](https://github.com/user-attachments/assets/5ef3ea9a-4dfb-43ef-bdfd-4c08bb390d1e)
+
 Key behaviours:
 - Reads the base `theme.json` stylesheet and all `styles/*.json` variation files from the active theme.
 - Generates variant CSS and scopes it so styles only apply when `is-style-{slug}` is present on the root element.
