@@ -28,34 +28,7 @@ class Assets {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
-		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_assets' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
-	}
-
-	/**
-	 * Enqueues styles and scripts for the theme.
-	 *
-	 * @return void
-	 */
-	public function enqueue_assets() {
-		$style_asset = include TSS_PLUGIN_PATH . 'assets/build/css/main.asset.php';
-		wp_enqueue_style(
-			'main-css',
-			TSS_PLUGIN_URL . 'assets/build/css/main.css',
-			$style_asset['dependencies'],
-			$style_asset['version']
-		);
-
-		$script_asset = include TSS_PLUGIN_PATH . 'assets/build/js/main.asset.php';
-
-		wp_enqueue_script(
-			'main-js',
-			TSS_PLUGIN_URL . 'assets/build/js/main.js',
-			$script_asset['dependencies'],
-			$script_asset['version'],
-			true
-		);
 	}
 
 	/**

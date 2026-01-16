@@ -597,14 +597,26 @@ class Theme_Data {
 			);
 		}
 
-		wp_localize_script(
-			'main-js',
-			'tss_data',
-			array(
-				'variations'     => $variations,
-				'useMappedNames' => $use_mapped ? 1 : 0,
-				'isBlockTheme'   => wp_is_block_theme(),
-			)
+		wp_register_script(
+			'tss-main',
+			'',
+			array(),
+			'v1.0',
+			true
+		);
+
+		wp_enqueue_script( 'tss-main' );
+
+		wp_add_inline_script(
+			'tss-main',
+			'window.tss_data = ' . wp_json_encode(
+				array(
+					'variations'     => $variations,
+					'useMappedNames' => $use_mapped ? 1 : 0,
+					'isBlockTheme'   => wp_is_block_theme(),
+				)
+			) . ';',
+			'before'
 		);
 	}
 }
