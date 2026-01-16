@@ -6,10 +6,12 @@ import { PanelBody, SelectControl } from '@wordpress/components';
 export default function Edit( { attributes, setAttributes } ) {
 	const { display = 'buttons' } = attributes ?? {};
 	const [ variations, setVariations ] = useState( [] );
+	const [ isBlockTheme, setIsBlockTheme ] = useState( true );
 
 	useEffect( () => {
-		if ( typeof window !== 'undefined' && window.tss_data?.variations ) {
+		if ( 'undefined' !== typeof window && window?.tss_data ) {
 			setVariations( window.tss_data.variations );
+			setIsBlockTheme( window.tss_data.isBlockTheme );
 		}
 	}, [] );
 
@@ -17,6 +19,19 @@ export default function Edit( { attributes, setAttributes } ) {
 		className: 'theme-style-switcher-block',
 		'data-display': display,
 	} );
+
+	if ( ! isBlockTheme ) {
+		return (
+			<div { ...blockProps }>
+				<p>
+					{ __(
+						'The Theme Style Switcher block only works with block themes. Your current theme is a classic theme.',
+						'dm-tss'
+					) }
+				</p>
+			</div>
+		);
+	}
 
 	return (
 		<>

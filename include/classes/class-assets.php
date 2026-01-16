@@ -30,7 +30,6 @@ class Assets {
 	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_assets' ) );
-		add_action( 'enqueue_block_assets', array( $this, 'enqueue_block_assets' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
 	}
 
@@ -77,31 +76,6 @@ class Assets {
 			TSS_PLUGIN_URL . 'assets/build/css/admin.css',
 			$style_asset['dependencies'],
 			$style_asset['version']
-		);
-	}
-
-	/**
-	 * Enqueues styles and scripts for the frontend.
-	 *
-	 * @return void
-	 */
-	public function enqueue_block_assets() {
-		$style_asset = include TSS_PLUGIN_PATH . 'assets/build/css/screen.asset.php';
-		wp_enqueue_style(
-			'block-css',
-			TSS_PLUGIN_URL . 'assets/build/css/screen.css',
-			$style_asset['dependencies'],
-			$style_asset['version']
-		);
-
-		$script_asset = include TSS_PLUGIN_PATH . 'assets/build/js/screen.asset.php';
-
-		wp_enqueue_script(
-			'block-js',
-			TSS_PLUGIN_URL . 'assets/build/js/screen.js',
-			$script_asset['dependencies'],
-			$script_asset['version'],
-			true
 		);
 	}
 }

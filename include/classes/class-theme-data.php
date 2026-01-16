@@ -603,6 +603,7 @@ class Theme_Data {
 			array(
 				'variations'     => $variations,
 				'useMappedNames' => $use_mapped ? 1 : 0,
+				'isBlockTheme'   => wp_is_block_theme(),
 			)
 		);
 	}

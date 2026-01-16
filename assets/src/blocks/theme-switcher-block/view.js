@@ -23,6 +23,13 @@
 	window.setThemeStyle = switchStyle;
 
 	document.addEventListener( 'DOMContentLoaded', () => {
+		if (
+			'undefined' !== typeof window &&
+			! window?.tss_data?.isBlockTheme
+		) {
+			return;
+		}
+
 		const saved = localStorage.getItem( 'theme-style-slug' );
 		if ( saved ) {
 			switchStyle( saved );
