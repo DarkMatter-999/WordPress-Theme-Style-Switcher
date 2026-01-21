@@ -1,3 +1,5 @@
+import { __ } from '@wordpress/i18n';
+
 /* global localStorage */
 
 ( function () {
@@ -48,7 +50,15 @@
 				}
 
 				if ( display === 'dropdown' ) {
+					const selectId = 'theme-style-select-' + Date.now();
+
+					const label = document.createElement( 'label' );
+					label.setAttribute( 'for', selectId );
+					label.textContent = __( 'Select Theme Style', 'dm-tss' );
+					label.classList.add( 'screen-reader-text' );
+
 					const select = document.createElement( 'select' );
+					select.id = selectId;
 					select.classList.add(
 						'tss-style-select',
 						'wp-block-button',
@@ -72,6 +82,7 @@
 						switchStyle( e.target.value );
 					} );
 
+					container.appendChild( label );
 					container.appendChild( select );
 					return;
 				}
